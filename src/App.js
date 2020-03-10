@@ -26,8 +26,8 @@ class App extends React.Component {
     addTask = (newText) => {
         let newTask = {
             title: newText,
-            isDone: true,
-            priority: "HIGEST"
+            isDone: false,
+            priority: "Highest"
         };
         let newTasks = [...this.state.tasks, newTask]
         this.setState({
@@ -54,18 +54,7 @@ class App extends React.Component {
         })
     };
 
-    // changeStatus = (task, i) => {
-    //     let newTasks = this.state.tasks.map(t => {
-    //         if (t == task){
-    //             return {...t, isDone: i};
-    //         }
-    //         return t;
-    //     });
-    //     this.setState( {
-    //         tasks: newTasks
-    //     })
-    // }
-
+   
     render = () => {
         return (
             <div className="App">
