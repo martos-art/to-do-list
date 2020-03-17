@@ -12,23 +12,28 @@ class App extends React.Component {
     // }
     // стейт это свойство
     // сет стейт это метод
+
+    nextTaskId = 0;
     state = {
         tasks: [
-            { title: "JS", isDone: true, priority: "HIGH" },
-            { title: "ReactJS", isDone: false, priority: "LOW" },
-            { title: "NodeJS", isDone: true, priority: "LOW" },
-            { title: "ReactNative", isDone: false, priority: "HIGH" },
-            { title: "Angular", isDone: true, priority: "HIGH" }
+            // { id: 1, title: "JS", isDone: true, priority: "HIGH" },
+            // { id: 2, title: "ReactJS", isDone: false, priority: "LOW" },
+            // { id: 3, title: "NodeJS", isDone: true, priority: "LOW" },
+            // { id: 4, title: "ReactNative", isDone: false, priority: "HIGH" },
+            // { id: 5, title: "Angular", isDone: true, priority: "HIGH" }
         ],
         filterValue: "All"
     };
 
+
     addTask = (newText) => {
         let newTask = {
+            id: this.nextTaskId,
             title: newText,
             isDone: false,
             priority: "Highest"
         };
+        this.nextTaskId++;
         let newTasks = [...this.state.tasks, newTask]
         this.setState({
             // setState асинхронная функция
@@ -40,38 +45,47 @@ class App extends React.Component {
             filterValue: newFilterValue
         })
     }
-    
-    changeStatus = (task, isDone) => {
+
+    cahngeTask = (taskId, obj) => {
         let newTasks = this.state.tasks.map(t => {
-            if (t != task) {
+            if (t.id === taskId) {
+                return { ...t, ...obj }
+            }
+            else {
                 return t;
-            } else {
-                return {...t, isDone: isDone}
             }
         });
         this.setState({
             tasks: newTasks
         })
+
+    }
+
+    changeStatus = (taskId, isDone) => {
+        this.cahngeTask(taskId, {isDone: isDone})
+    };
+    changeTitle = (taskId, title) =>{
+        this.cahngeTask(taskId, {title: title})
     };
 
-   
     render = () => {
         return (
             <div className="App">
                 <div className="todoList">
-                    <TodoListHeader addTask={this.addTask}/>
-                    <TodoListTasks  changeStatus={this.changeStatus}
-                                    tasks={this.state.tasks.filter(t => {
-                        if (this.state.filterValue === "All") {
-                            return true;
-                        }
-                        if (this.state.filterValue === "Completed") {
-                            return t.isDone !== false;
-                        }
-                        if (this.state.filterValue === "Active") {
-                            return t.isDone !== true;
-                        }
-                    })} />
+                    <TodoListHeader addTask={this.addTask} />
+                    <TodoListTasks changeTitle={this.changeTitle}
+                        changeStatus={this.changeStatus}
+                        tasks={this.state.tasks.filter(t => {
+                            if (this.state.filterValue === "All") {
+                                return true;
+                            }
+                            if (this.state.filterValue === "Completed") {
+                                return t.isDone !== false;
+                            }
+                            if (this.state.filterValue === "Active") {
+                                return t.isDone !== true;
+                            }
+                        })} />
                     <TodoListFooter changeFilter={this.changeFilter}
                         filterValue={this.state.filterValue} />
                 </div>

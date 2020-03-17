@@ -7,7 +7,7 @@ class TodoListTasks extends React.Component {
 
         let tasksElements = this.props.tasks.map( task => {
             return (
-                <TodoListTask task={task} changeStatus={this.props.changeStatus} />
+                <TodoListTask task={task} changeTitle={this.props.changeTitle} changeStatus={this.props.changeStatus} />
             )
         });
         return (
