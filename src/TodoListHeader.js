@@ -43,7 +43,6 @@ class TodoListHeader extends React.Component {
                     <input className={classForImput} type="text" placeholder="New task name"
                         onKeyPress={this.onKeyPress}
                         onChange={this.onChange}
-
                         value={this.state.title}/>
                     <button onClick={this.onAddTaskClick} >Add</button>
                 </div>

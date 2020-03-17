@@ -11,9 +11,11 @@ class App extends React.Component {
     //     this.newTaskTitleRef = React.createRef();
     // }
     // стейт это свойство
-    // сет стейт это метод
-
-    nextTaskId = 0;
+    componentDidMount() {
+        this.restoreState();
+    }
+    
+    
     state = {
         tasks: [
             // { id: 1, title: "JS", isDone: true, priority: "HIGH" },
@@ -22,31 +24,29 @@ class App extends React.Component {
             // { id: 4, title: "ReactNative", isDone: false, priority: "HIGH" },
             // { id: 5, title: "Angular", isDone: true, priority: "HIGH" }
         ],
-        filterValue: "All"
+        filterValue: "All",
+        nextTaskId: 0
     };
-
-
     addTask = (newText) => {
         let newTask = {
-            id: this.nextTaskId,
+            id: this.state.nextTaskId,
             title: newText,
             isDone: false,
             priority: "Highest"
         };
-        this.nextTaskId++;
+        this.state.nextTaskId++;
         let newTasks = [...this.state.tasks, newTask]
         this.setState({
-            // setState асинхронная функция
             tasks: newTasks
-        });
+        },() => this.saveState());
+        
     }
     changeFilter = (newFilterValue) => {
         this.setState({
             filterValue: newFilterValue
         })
     }
-
-    cahngeTask = (taskId, obj) => {
+    changeTask = (taskId, obj) => {
         let newTasks = this.state.tasks.map(t => {
             if (t.id === taskId) {
                 return { ...t, ...obj }
@@ -57,16 +57,34 @@ class App extends React.Component {
         });
         this.setState({
             tasks: newTasks
-        })
-
+        }, () => {this.saveState();});
     }
-
     changeStatus = (taskId, isDone) => {
-        this.cahngeTask(taskId, {isDone: isDone})
+        this.changeTask(taskId, { isDone: isDone })
     };
-    changeTitle = (taskId, title) =>{
-        this.cahngeTask(taskId, {title: title})
+    changeTitle = (taskId, title) => {
+        this.changeTask(taskId, { title: title })
     };
+
+
+
+    saveState = () => {
+        let stateAsString = JSON.stringify(this.state);
+        localStorage.setItem("our-state", stateAsString);
+    }
+    restoreState = () => {
+       let state = {
+            tasks: [],
+            filterValue: "All"
+        };
+
+        let stateAsString = localStorage.getItem("our-state");
+
+        if (stateAsString != null) {
+            state = JSON.parse(stateAsString);
+        }
+        this.setState(state);
+    }
 
     render = () => {
         return (
